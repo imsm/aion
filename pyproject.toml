@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aion"
+dynamic = ["version"]
+description = "A neutral, persistent working-state broker that keeps your AI coding tools (Claude, Cursor, …) on the same page — over MCP."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Ismail Saleh" }]
+keywords = [
+    "mcp", "model-context-protocol", "ai", "agents", "llm",
+    "claude", "cursor", "memory", "context", "shared-state",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Version Control :: Git",
+]
+dependencies = ["mcp>=1.28.1"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+aion = "aion.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/imsm/aion"
+Repository = "https://github.com/imsm/aion"
+Issues = "https://github.com/imsm/aion/issues"
+
+[tool.hatch.version]
+path = "src/aion/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aion"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/aion", "hooks", "README.md", "LICENSE", "CHANGELOG.md"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E402"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

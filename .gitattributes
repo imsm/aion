@@ -1,0 +1,4 @@
+# Normalize line endings across platforms; keep shell scripts LF.
+* text=auto eol=lf
+*.png binary
+*.jpg binary

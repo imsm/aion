@@ -1,0 +1,21 @@
+# aion database (state lives in ~/.aion by default; never commit a db)
+*.db
+*.db-wal
+*.db-shm
+.aion/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
