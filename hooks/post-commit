@@ -1,14 +1,14 @@
 #!/bin/sh
-# aion - post-commit hook
+# aionai - post-commit hook
 # Auto-logs every commit as a 'change' entry so whichever AI tool you talk to next
 # already knows the repo moved — you never hand-update a shared note again.
 #
 # Install into the repo you want tracked:
 #   cp hooks/post-commit .git/hooks/post-commit && chmod +x .git/hooks/post-commit
 #
-# Set AION_SEGMENT to that project's segment. `aion` must be on PATH
-# (pipx install aion), or replace it with `uvx aion` / an absolute path.
+# Set AIONAI_SEGMENT to that project's segment. `aionai` must be on PATH
+# (pipx install aionai), or replace it with `uvx aionai` / an absolute path.
 
-export AION_SEGMENT="${AION_SEGMENT:-project}"
+export AIONAI_SEGMENT="${AIONAI_SEGMENT:-project}"
 
-aion log-commit >/dev/null 2>&1 &
+aionai log-commit >/dev/null 2>&1 &

@@ -1,8 +1,8 @@
-"""aion.store — the data layer.
+"""aionai.store — the data layer.
 
 One SQLite table (``entries``), append-only. Every function here is plain Python
 callable without MCP, so the core logic is trivially testable. The MCP tools in
-``aion.server`` are thin wrappers over these.
+``aionai.server`` are thin wrappers over these.
 """
 
 from __future__ import annotations
@@ -17,11 +17,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # --- configuration (env-driven; each MCP client sets these in its own config) ---
-DB_PATH = os.environ.get("AION_DB", str(Path.home() / ".aion" / "aion.db"))
+DB_PATH = os.environ.get("AIONAI_DB", str(Path.home() / ".aionai" / "aionai.db"))
 # Who is writing — declared by each client so every entry has a clean audit tag.
-SOURCE = os.environ.get("AION_SOURCE", "agent")
+SOURCE = os.environ.get("AIONAI_SOURCE", "agent")
 # Default project segment. The first element of a dotted path IS the project.
-DEFAULT_SEGMENT = os.environ.get("AION_SEGMENT", "project")
+DEFAULT_SEGMENT = os.environ.get("AIONAI_SEGMENT", "project")
 
 LOG_TYPES = {"decision", "change", "question", "note", "task"}
 ROADMAP_KINDS = {"project", "segment", "phase", "epic", "task"}  # tree node kinds
@@ -516,7 +516,7 @@ def log_commit(db_path=DB_PATH) -> None:
         files = [f for f in _git("diff-tree", "--no-commit-id", "--name-only",
                                  "-r", "HEAD").split("\n") if f]
     except Exception as e:  # noqa: BLE001
-        print(f"aion: could not read git state: {e}", file=sys.stderr)
+        print(f"aionai: could not read git state: {e}", file=sys.stderr)
         return
     seg = DEFAULT_SEGMENT
     tops = {f.split("/", 1)[0] for f in files if "/" in f}
@@ -524,4 +524,4 @@ def log_commit(db_path=DB_PATH) -> None:
         seg = f"{DEFAULT_SEGMENT}/{next(iter(tops))}"
     rid = log_entry(seg, "change", f"commit {sha}: {msg}",
                     refs={"commit": sha, "files": files}, source="git", db_path=db_path)
-    print(f"aion: logged commit {sha} as entry {rid} in {seg}")
+    print(f"aionai: logged commit {sha} as entry {rid} in {seg}")

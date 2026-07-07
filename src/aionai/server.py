@@ -1,7 +1,7 @@
-"""aion.server — the MCP surface.
+"""aionai.server — the MCP surface.
 
-Thin ``@mcp.tool`` / ``@mcp.prompt`` wrappers over :mod:`aion.store` and
-:mod:`aion.delivery`. Each tool parses its arguments, calls one storage function,
+Thin ``@mcp.tool`` / ``@mcp.prompt`` wrappers over :mod:`aionai.store` and
+:mod:`aionai.delivery`. Each tool parses its arguments, calls one storage function,
 and returns JSON. All the real logic lives in the store.
 """
 
@@ -15,7 +15,7 @@ from . import store
 from .delivery import deliver_handoff
 from .store import DEFAULT_SEGMENT, SOURCE
 
-mcp = FastMCP("aion")
+mcp = FastMCP("aionai")
 
 
 # --------------------------------------------------------------------------- #
@@ -99,7 +99,7 @@ def context_handoff(segment: str, content: str, to: str, intent: str = "notify",
                     refs: str = "") -> str:
     """Post a handoff to another tool's inbox (to = cursor | claude-code |
     claude-desktop). It lands in the target's inbox and stays PENDING until the
-    receiver resolves it. If AION_DELIVERY is enabled and the target has a verified
+    receiver resolves it. If AIONAI_DELIVERY is enabled and the target has a verified
     deeplink (today: cursor), a doorbell also summons that tool with a fixed nudge —
     the URL never carries your content. Returns the entry id and delivery outcome."""
     store.init_db()
@@ -202,46 +202,47 @@ def project_lookup(query: str, project: str) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# prompts (surface as slash commands, e.g. /mcp__aion__pull)
+# prompts (surface as slash commands, e.g. /mcp__aionai__pull)
 # --------------------------------------------------------------------------- #
 
-@mcp.prompt(title="aion: pull working state")
+@mcp.prompt(title="aionai: pull working state")
 def pull(segment: str = "") -> str:
-    """Pull current aion working state for a segment (default: whole project)."""
+    """Pull current aionai working state for a segment (default: whole project)."""
     seg = f"{DEFAULT_SEGMENT}/{segment}" if segment else DEFAULT_SEGMENT
-    return (f"Call the aion MCP tool context_pull with segment=\"{seg}\". Then give a "
+    return (f"Call the aionai MCP tool context_pull with segment=\"{seg}\". Then give a "
             "tight readout of open tasks, open questions, recent decisions/changes, and "
             "your inbox. Do not paste raw JSON.")
 
 
-@mcp.prompt(title="aion: log an entry")
+@mcp.prompt(title="aionai: log an entry")
 def log(entry: str = "") -> str:
-    """Log a decision/change/question/task/note to aion."""
+    """Log a decision/change/question/task/note to aionai."""
     src = f'Log this: "{entry}".' if entry else "Log what we just discussed."
-    return (f"Call the aion MCP tool context_log. {src} Choose the correct type and the "
+    return (f"Call the aionai MCP tool context_log. {src} Choose the correct type and the "
             f"most specific segment under \"{DEFAULT_SEGMENT}\". One concise line; include "
             "refs (files/commit) when relevant. Report the entry id.")
 
 
-@mcp.prompt(title="aion: resolve an entry")
+@mcp.prompt(title="aionai: resolve an entry")
 def resolve(entry_id: str = "") -> str:
-    """Close an open aion question or task by id."""
+    """Close an open aionai question or task by id."""
     if not entry_id:
-        return "Ask me which aion entry id to resolve, then call context_resolve with it."
-    return f"Call the aion MCP tool context_resolve with entry_id={entry_id}. Confirm it resolved."
+        return "Ask me which aionai entry id to resolve, then call context_resolve with it."
+    return (f"Call the aionai MCP tool context_resolve with entry_id={entry_id}. "
+            "Confirm it resolved.")
 
 
-@mcp.prompt(title="aion: search history")
+@mcp.prompt(title="aionai: search history")
 def search(query: str = "") -> str:
-    """Full-text search aion history."""
-    return (f"Call the aion MCP tool context_search with query=\"{query}\". Summarize the "
+    """Full-text search aionai history."""
+    return (f"Call the aionai MCP tool context_search with query=\"{query}\". Summarize the "
             "matches tightly (ids, segments, one line each).")
 
 
-@mcp.prompt(title="aion: hand off to another tool")
+@mcp.prompt(title="aionai: hand off to another tool")
 def handoff(to: str = "cursor", segment: str = "", content: str = "") -> str:
     """Post a handoff to another tool's inbox (and optional doorbell)."""
     seg = f"{DEFAULT_SEGMENT}/{segment}" if segment else DEFAULT_SEGMENT
     body = f'content="{content}"' if content else "the plan we just discussed"
-    return (f"Call the aion MCP tool context_handoff with segment=\"{seg}\", to=\"{to}\", "
+    return (f"Call the aionai MCP tool context_handoff with segment=\"{seg}\", to=\"{to}\", "
             f"{body}. Report the entry id and whether the doorbell fired or it was inbox-only.")

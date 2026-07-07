@@ -1,8 +1,8 @@
-# aion database (state lives in ~/.aion by default; never commit a db)
+# aionai database (state lives in ~/.aionai by default; never commit a db)
 *.db
 *.db-wal
 *.db-shm
-.aion/
+.aionai/
 
 # Python
 __pycache__/

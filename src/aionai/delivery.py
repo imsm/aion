@@ -1,7 +1,7 @@
-"""aion.delivery — the optional "doorbell".
+"""aionai.delivery — the optional "doorbell".
 
-After a handoff is logged to a target's inbox, aion can *summon* that tool by
-opening its deeplink with a short, fixed nudge. Off by default (``AION_DELIVERY``).
+After a handoff is logged to a target's inbox, aionai can *summon* that tool by
+opening its deeplink with a short, fixed nudge. Off by default (``AIONAI_DELIVERY``).
 
 Security: the deeplink carries only a fixed template (segment + handoff id), never
 the handoff content — so untrusted content can never ride the URL. Only schemes in
@@ -16,7 +16,7 @@ from urllib.parse import quote, urlparse
 
 from .store import _sanitize_segment
 
-DELIVERY_ENABLED = os.environ.get("AION_DELIVERY", "").lower() in ("1", "true", "yes")
+DELIVERY_ENABLED = os.environ.get("AIONAI_DELIVERY", "").lower() in ("1", "true", "yes")
 
 # Doorbell rows only for verified deeplink schemes. Cursor's prompt deeplink is
 # documented: prefills the chat, user must confirm, 8000-char cap.
@@ -29,7 +29,7 @@ TARGETS = {
     },
 }
 DOORBELL_TEMPLATE = (
-    "Pull your aion inbox for segment {segment} and continue. (handoff #{entry_id})"
+    "Pull your aionai inbox for segment {segment} and continue. (handoff #{entry_id})"
 )
 
 
@@ -55,7 +55,7 @@ def deliver_handoff(to: str, segment: str, entry_id: int) -> dict:
     """Fire the doorbell if enabled and the target has a verified deeplink; else the
     handoff stays inbox-only (the receiver sees it on its next pull)."""
     if not DELIVERY_ENABLED:
-        return {"delivery": "inbox-only", "reason": "AION_DELIVERY not enabled"}
+        return {"delivery": "inbox-only", "reason": "AIONAI_DELIVERY not enabled"}
     row = TARGETS.get(to)
     if not row:
         return {"delivery": "inbox-only", "reason": f"no verified doorbell for {to!r}"}

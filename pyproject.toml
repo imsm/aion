@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "aion"
+name = "aionai"
 dynamic = ["version"]
 description = "A neutral, persistent working-state broker that keeps your AI coding tools (Claude, Cursor, …) on the same page — over MCP."
 readme = "README.md"
@@ -34,21 +34,21 @@ dependencies = ["mcp>=1.28.1"]
 dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]
-aion = "aion.cli:main"
+aionai = "aionai.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/imsm/aion"
-Repository = "https://github.com/imsm/aion"
-Issues = "https://github.com/imsm/aion/issues"
+Homepage = "https://github.com/imsm/aionai"
+Repository = "https://github.com/imsm/aionai"
+Issues = "https://github.com/imsm/aionai/issues"
 
 [tool.hatch.version]
-path = "src/aion/__init__.py"
+path = "src/aionai/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/aion"]
+packages = ["src/aionai"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/aion", "hooks", "README.md", "LICENSE", "CHANGELOG.md"]
+include = ["src/aionai", "hooks", "README.md", "LICENSE", "CHANGELOG.md"]
 
 [tool.ruff]
 line-length = 100

@@ -1,13 +1,13 @@
-"""Tests for the aion storage layer (no MCP required)."""
+"""Tests for the aionai storage layer (no MCP required)."""
 
 import pytest
 
-from aion import store
+from aionai import store
 
 
 @pytest.fixture()
 def db(tmp_path):
-    p = str(tmp_path / "aion-test.db")
+    p = str(tmp_path / "aionai-test.db")
     store.init_db(p)
     return p
 
