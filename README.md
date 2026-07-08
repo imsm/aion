@@ -11,8 +11,10 @@ you stop being the copy-paste bus between them.
 
 [![Add aionai to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=aionai&config=eyJjb21tYW5kIjogInV2eCIsICJhcmdzIjogWyJhaW9uYWkiXX0=)
 
-> One-click install for Cursor. After it's added, set `AIONAI_SOURCE=cursor` in the
-> server's env. (Prefer manual setup? See [Connect your tools](#connect-your-tools).)
+> One-click install for Cursor (it configures `uvx aionai`). After it's added, set
+> `AIONAI_SOURCE=cursor` in the server's env. If Cursor can't find `uvx`, see
+> [Troubleshooting](#troubleshooting); or set it up manually via
+> [Connect your tools](#connect-your-tools).
 
 ---
 
@@ -36,15 +38,21 @@ just holds the live *working state* and hands each tool the slice it needs.
 
 ## Install
 
+Most portable — works on Windows, macOS, and Linux, and puts the `aionai` command
+where GUI apps (Cursor, Claude Desktop) can find it:
+
 ```bash
-pipx install aionai        # or:  uv tool install aionai
+pipx install aionai
 ```
 
-No install step at all, if you use `uv`:
+Already use [uv](https://docs.astral.sh/uv/)? Skip the install entirely:
 
 ```bash
 uvx aionai --help
 ```
+
+Requires **Python 3.10+**. If a client later reports the launcher (`aionai` / `uvx`)
+"not recognized", see [Troubleshooting](#troubleshooting).
 
 ## Connect your tools
 
@@ -137,6 +145,28 @@ One SQLite database, one append-only table. Every decision, task, handoff, and
 roadmap node is a row tagged with a `segment` and a `type`. History is free because
 nothing is overwritten. Full-text search uses FTS5 with a `LIKE` fallback. The MCP
 tools are thin wrappers over a plain-Python storage layer (`src/aionai/store.py`).
+
+## Troubleshooting
+
+**A client reports `'uvx'` / `'aionai'` is not recognized (or the server errors on start).**
+The client can't find the launcher on its PATH — common for GUI apps (Cursor, Claude
+Desktop) on **Windows and macOS**, which don't always inherit your shell's PATH. Fixes,
+best first:
+
+1. **Use pipx:** `pipx install aionai`, then set `"command": "aionai"`. pipx puts the
+   command where GUI apps usually find it.
+2. **Point at the full path** of the launcher. Find it with `where uvx` (Windows) or
+   `which uvx` (macOS/Linux), then use it verbatim, e.g.:
+   ```json
+   "aionai": { "command": "C:/Users/you/AppData/Roaming/Python/Python3xx/Scripts/uvx.exe",
+               "args": ["aionai"], "env": { "AIONAI_SOURCE": "cursor" } }
+   ```
+3. **Skip the launcher** — run via your Python directly (after `pip install aionai`):
+   ```json
+   "aionai": { "command": "python", "args": ["-m", "aionai.cli"] }
+   ```
+
+Then **restart the client** so it re-reads the config.
 
 ## Configuration
 
